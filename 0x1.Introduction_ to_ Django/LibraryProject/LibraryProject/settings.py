@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'alx_book_store',
         'USER': 'root',
-        'PASSWORD': '/*-+awsedrAWSEDR1@',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }
