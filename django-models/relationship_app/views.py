@@ -34,12 +34,15 @@ def register(request):
     
     return render(request, 'relationship_app/register.html', {'form': form})
 
+# Function to check if a user is an admin
 def is_admin(user):
     return user.userprofile.role == 'Admin'
 
+# Function to check if a user is a librarian
 def is_librarian(user):
     return user.userprofile.role == 'Librarian'
 
+# Function to check if a user is a member
 def is_member(user):
     return user.userprofile.role == 'Member'
 
