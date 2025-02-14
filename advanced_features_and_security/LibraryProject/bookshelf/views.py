@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required, login_required
 from .models import Book
+from .forms import ExampleForm
 from django.db.models import Q
 
 # Create your views here.
@@ -48,3 +49,14 @@ def book_search(request):
         books = Book.objects.all()
     
     return render(request, 'bookshelf/book_list.html', {'books': books})
+
+def add_book(request):
+    if request.method == "POST":
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')  # ✅ Redirect to a book listing page
+    else:
+        form = ExampleForm()
+    
+    return render(request, 'bookshelf/form_example.html', {'form': form})
