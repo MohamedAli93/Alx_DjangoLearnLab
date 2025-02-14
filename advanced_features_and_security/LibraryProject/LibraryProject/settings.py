@@ -11,29 +11,38 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-6km4+n0(o#reoma3=qvsrv@e!v#p09ee3kpq6da0w3i_@8m&6@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # ✅ Must be False in production
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # ✅ Update with your actual domain or IP
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Application definition
+# ✅ Security Headers
+SECURE_BROWSER_XSS_FILTER = True  # Protects against XSS attacks
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents MIME-type sniffing
+X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking
+CSRF_COOKIE_SECURE = True  # Ensures CSRF tokens are sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookies are sent over HTTPS
 
+# ✅ Enforce HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # Enables HSTS for one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Applies HSTS to subdomains
+SECURE_HSTS_PRELOAD = True  # Preloads HSTS into browsers
+
+# ✅ Content Security Policy (CSP)
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf',
-    'relationship_app'
+    'relationship_app',
+    'csp',  # ✅ Added CSP Middleware
 ]
 
 MIDDLEWARE = [
@@ -53,7 +63,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # ✅ Enables Content Security Policy
 ]
+
+# ✅ Content Security Policy Configuration
+CSP_DEFAULT_SRC = ("'self'",)  # Restrict all resources to same-origin
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")  # Allow only inline scripts from self
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # Allow inline styles
+CSP_IMG_SRC = ("'self'", "data:")  # Allow images from self and data URIs
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
@@ -75,10 +92,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# Database Configuration (MySQL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -90,10 +104,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,25 +120,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
