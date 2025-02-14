@@ -41,6 +41,10 @@ def delete_book(request, book_id):
     book.delete()
     return redirect('book_list')
 
+def book_list(request):
+    books = Book.objects.all()  # Fetch all books
+    return render(request, 'bookshelf/book_list.html', {'books': books})
+
 def book_search(request):
     query = request.GET.get('search', '')
     if query:
