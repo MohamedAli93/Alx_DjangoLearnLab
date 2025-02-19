@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import filters, SearchFilter, OrderingFilter
 from django_filters import rest_framework, DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
@@ -31,7 +31,7 @@ class BookListView(generics.ListAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = (DjangoFilterBackend, SearchFilter, filters.OrderingFilter)  # filters.OrderingFilter is here
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)  # filters.OrderingFilter is here
     filterset_fields = ['title', 'author', 'publication_year']  # Fields for filtering
     search_fields = ['title', 'author']  # Fields for searching
     ordering_fields = ['title', 'publication_year']  # Fields for ordering
